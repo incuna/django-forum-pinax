@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-forum\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-30 02:58+0000\n"
+"POT-Creation-Date: 2009-02-07 01:00+0000\n"
 "PO-Revision-Date: 2008-10-28 12:26+0500\n"
 "Last-Translator: Andy Mikhailenko <neithere@gmail.com>\n"
 "Language-Team:Andy Mikhailenko <neithere@gmail.com>\n"
@@ -18,118 +18,165 @@ msgstr ""
 #: feeds.py:28
 #, python-format
 msgid "%(title)s's Forum: %(forum)s"
-msgstr "%(title)s. ФоÑÑм %(forum)s"
+msgstr "%(title)s. Форум %(forum)s"
 
 #: feeds.py:32
 #, python-format
 msgid "%(title)s's Forum"
-msgstr "%(title)s. ФоÑÑм"
+msgstr "%(title)s. Форум"
 
 #: feeds.py:38
 msgid "Latest forum posts"
-msgstr "Ðоследние сообÑения в ÑоÑÑме"
+msgstr "Последние сообщения в форуме"
 
-#: models.py:23 models.py:149
+#: forms.py:5 models.py:26 models.py:154
 msgid "Title"
-msgstr "Ðаголовок"
+msgstr "Заголовок"
 
-#: models.py:24
+#: forms.py:6 forms.py:10 models.py:204
+msgid "Body"
+msgstr "Текст"
+
+#: forms.py:7 forms.py:11
+msgid "Subscribe via email"
+msgstr ""
+
+#: models.py:27
 msgid "Slug"
 msgstr "Slug"
 
-#: models.py:26
+#: models.py:29
 msgid "Description"
-msgstr "Ðписание"
+msgstr "Описание"
 
-#: models.py:27 models.py:170
+#: models.py:30 models.py:175
 msgid "Threads"
-msgstr "ТемÑ"
+msgstr "Темы"
 
-#: models.py:28 models.py:152
+#: models.py:31 models.py:157
 msgid "Posts"
-msgstr "СообÑения"
+msgstr "Сообщения"
 
-#: models.py:77
+#: models.py:82
 msgid "Forum parents"
-msgstr "РодиÑелÑские ÑоÑÑмÑ"
+msgstr "Родительские форумы"
 
-#: models.py:107 templates/forum/forum_list.html:8
+#: models.py:112 templates/forum/forum_list.html:8
 msgid "Forum"
-msgstr "ФоÑÑм"
+msgstr "Форум"
 
-#: models.py:108 templates/forum_base.html:85
+#: models.py:113 templates/forum_base.html:88
 #: templates/forum/forum_list.html:3
 msgid "Forums"
-msgstr "ФоÑÑмÑ"
+msgstr "Форумы"
 
-#: models.py:113
+#: models.py:118
 msgid "You must not save a forum in itself!"
-msgstr "ÐаÑÑÑдниÑелÑно соÑÑаниÑÑ ÑоÑÑм в самого себя!"
+msgstr "Затруднительно сохранить форум в самого себя!"
 
-#: models.py:150
+#: models.py:155
 msgid "Sticky?"
-msgstr "ÐÑилепиÑÑ?"
+msgstr "Прилепить?"
 
-#: models.py:151
+#: models.py:156
 msgid "Closed?"
-msgstr "ÐакÑÑÑÑ?"
+msgstr "Закрыть?"
 
-#: models.py:153
+#: models.py:158
 msgid "Views"
-msgstr "ÐÑосмоÑÑÑ"
+msgstr "Просмотры"
 
-#: models.py:154
+#: models.py:159
 msgid "Latest Post Time"
-msgstr "ÐÑемя последнего сообÑения"
+msgstr "Время последнего сообщения"
 
-#: models.py:169
+#: models.py:174
 msgid "Thread"
 msgstr "Тема"
 
-#: models.py:199
-msgid "Body"
-msgstr "ТексÑ"
-
-#: models.py:200
+#: models.py:205
 msgid "Time"
-msgstr "ÐÑемя"
+msgstr "Время"
 
-#: models.py:255
+#: models.py:260
 msgid "Subscription"
-msgstr "Ðодписка"
+msgstr "Подписка"
 
-#: models.py:256
+#: models.py:261
 msgid "Subscriptions"
-msgstr "Ðодписки"
+msgstr "Подписки"
 
-#: views.py:154
+#: views.py:222
 msgid "Sorry, you need to login."
-msgstr "ÐзвиниÑе, Ðам нÑжно войÑи в сисÑемÑ"
+msgstr "Извините, Вам нужно войти в систему"
 
-#: templates/forum_base.html:85
+#: templates/forum_base.html:88
 msgid "Home"
-msgstr "Ðомой"
+msgstr "Домой"
 
 #: templates/forum/forum_list.html:9
 msgid "Last Post"
-msgstr "Ðоследнее сообÑение"
+msgstr "Последнее сообщение"
 
 #: templates/forum/forum_list.html:14
 #, python-format
 msgid "%(thread_count)s threads, %(post_count)s posts"
-msgstr "%(thread_count)s Ñем, %(post_count)s сообÑений"
+msgstr "%(thread_count)s тем, %(post_count)s сообщений"
 
 #: templates/forum/forum_list.html:17
 msgid "view"
-msgstr "пÑосмоÑÑ"
+msgstr "просмотр"
 
 #: templates/forum/forum_list.html:17
 msgid "No Posts"
-msgstr "СообÑений неÑ"
+msgstr "Сообщений нет"
 
-#: templates/forum/forum_list.html:22
+#: templates/forum/forum_list.html:22 templates/forum/thread.html:33
 msgid "Update Subscriptions"
-msgstr "ÐбновиÑÑ подписки"
+msgstr "Обновить подписки"
 
-#~ msgid "Post"
-#~ msgstr "СообÑение"
+#: templates/forum/newthread.html:4 templates/forum/newthread.html.py:11
+#, python-format
+msgid "New Thread in %(title)s"
+msgstr ""
+
+#: templates/forum/newthread.html:13
+#, fuzzy
+msgid "New Thread"
+msgstr "Тема"
+
+#: templates/forum/newthread.html:18
+msgid "Create a Thread"
+msgstr ""
+
+#: templates/forum/newthread.html:21 templates/forum/reply.html:16
+#, fuzzy
+msgid "Posting As"
+msgstr "Сообщения"
+
+#: templates/forum/newthread.html:23 templates/forum/reply.html:18
+msgid "Post"
+msgstr "Сообщение"
+
+#: templates/forum/reply.html:4
+#, python-format
+msgid "Reply to thread  \"%(title)s\""
+msgstr ""
+
+#: templates/forum/reply.html:6
+#, python-format
+msgid "Reply to Thread \"%(title)s\""
+msgstr ""
+
+#: templates/forum/reply.html:13
+msgid "Reply to Thread"
+msgstr ""
+
+#: templates/forum/thread.html:25 templates/forum/thread_list.html:61
+msgid "First"
+msgstr ""
+
+#: templates/forum/thread.html:29 templates/forum/thread_list.html:65
+#, fuzzy
+msgid "Last"
+msgstr "Последнее сообщение"
