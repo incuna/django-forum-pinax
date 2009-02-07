@@ -13,17 +13,13 @@ from django.conf.urls.defaults import *
 from forum.models import Forum
 from forum.feeds import RssForumFeed, AtomForumFeed
 
-forum_dict = {
-    'queryset' : Forum.objects.filter(parent__isnull=True),
-}
-
 feed_dict = {
     'rss' : RssForumFeed,
     'atom': AtomForumFeed
 }
 
 urlpatterns = patterns('',
-    url(r'^$', 'django.views.generic.list_detail.object_list', forum_dict, name='forum_index'),
+    url(r'^$', 'forum.views.forums_list', name='forum_index'),
     
     url(r'^(?P<url>(rss|atom).*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feed_dict}),
 

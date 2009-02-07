@@ -7,9 +7,11 @@ methods. A little extra logic is in views.py.
 
 from django.db import models
 import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
+from forum.managers import ForumManager
 
 class Forum(models.Model):
     """
@@ -20,12 +22,15 @@ class Forum(models.Model):
     All of the parent/child recursion code here is borrowed directly from
     the Satchmo project: http://www.satchmoproject.com/
     """
+    groups = models.ManyToManyField(Group, blank=True)
     title = models.CharField(_("Title"), max_length=100)
     slug = models.SlugField(_("Slug"))
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
     description = models.TextField(_("Description"))
     threads = models.IntegerField(_("Threads"), default=0)
     posts = models.IntegerField(_("Posts"), default=0)
+
+    objects = ForumManager()
 
     def _get_forum_latest_post(self):
         """This gets the latest post for the forum"""

@@ -19,6 +19,11 @@ from django.views.generic.list_detail import object_list
 from forum.models import Forum,Thread,Post,Subscription
 from forum.forms import CreateThreadForm, ReplyForm
 
+def forums_list(request):
+    queryset = Forum.objects.for_groups(request.user.groups.all()).filter(parent__isnull=True)
+    return object_list( request,
+                        queryset=queryset)
+
 def forum(request, slug):
     """
     Displays a list of threads within a forum.
@@ -26,12 +31,12 @@ def forum(request, slug):
     most recent post.
     """
     try:
-        f = Forum.objects.select_related().get(slug=slug)
+        f = Forum.objects.for_groups(request.user.groups.all()).select_related().get(slug=slug)
     except Forum.DoesNotExist:
-        return Http404
+        raise Http404
 
     form = CreateThreadForm()
-
+    child_forums = f.child.for_groups(request.user.groups.all())
     return object_list( request,
                         queryset=f.thread_set.select_related().all(),
                         paginate_by=10,
@@ -39,6 +44,7 @@ def forum(request, slug):
                         template_name='forum/thread_list.html',
                         extra_context = {
                             'forum': f,
+                            'child_forums': child_forums,
                             'form': form,
                         })
 
@@ -49,8 +55,10 @@ def thread(request, thread):
     """
     try:
         t = Thread.objects.select_related().get(pk=thread)
+        if not Forum.objects.has_access(t.forum, request.user.groups.all()):
+            raise Http404
     except Thread.DoesNotExist:
-        return Http404
+        raise Http404
     
     p = t.post_set.select_related('author').all().order_by('time')
     s = None
@@ -89,6 +97,8 @@ def reply(request, thread):
     t = get_object_or_404(Thread, pk=thread)
     if t.closed:
         return HttpResponseServerError()
+    if not Forum.objects.has_access(t.forum, request.user.groups.all()):
+        return HttpResponseForbidden()
 
     if request.method == "POST":
         form = ReplyForm(request.POST)
@@ -167,6 +177,9 @@ def newthread(request, forum):
         return HttpResponseServerError()
 
     f = get_object_or_404(Forum, slug=forum)
+    
+    if not Forum.objects.has_access(f, request.user.groups.all()):
+        return HttpResponseForbidden()
 
     if request.method == 'POST':
         form = CreateThreadForm(request.POST)

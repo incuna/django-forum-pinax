@@ -3,6 +3,7 @@ from forum.models import Forum, Thread, Post, Subscription
 
 class ForumAdmin(admin.ModelAdmin):
     list_display = ('title', '_parents_repr')
+    list_filter = ('groups',)
     ordering = ['parent', 'title']
     prepopulated_fields = {"slug": ("title",)}
 
