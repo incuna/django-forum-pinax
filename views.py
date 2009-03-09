@@ -19,6 +19,8 @@ from django.views.generic.list_detail import object_list
 from forum.models import Forum,Thread,Post,Subscription
 from forum.forms import CreateThreadForm, ReplyForm
 
+FORUM_PAGINATION = getattr(settings, 'FORUM_PAGINATION', 10)
+
 def forums_list(request):
     queryset = Forum.objects.for_groups(request.user.groups.all()).filter(parent__isnull=True)
     return object_list( request,
@@ -39,7 +41,7 @@ def forum(request, slug):
     child_forums = f.child.for_groups(request.user.groups.all())
     return object_list( request,
                         queryset=f.thread_set.select_related().all(),
-                        paginate_by=10,
+                        paginate_by=FORUM_PAGINATION,
                         template_object_name='thread',
                         template_name='forum/thread_list.html',
                         extra_context = {
@@ -77,7 +79,7 @@ def thread(request, thread):
     
     return object_list( request,
                         queryset=p,
-                        paginate_by=10,
+                        paginate_by=FORUM_PAGINATION,
                         template_object_name='post',
                         template_name='forum/thread.html',
                         extra_context = {
