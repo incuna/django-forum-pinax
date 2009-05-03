@@ -245,7 +245,7 @@ class Post(models.Model):
         ordering = ('-time',)
         
     def get_absolute_url(self):
-        return '%s#post%s' % (self.thread.get_absolute_url(), self.id)
+        return '%s?page=last#post%s' % (self.thread.get_absolute_url(), self.id)
     
     def __unicode__(self):
         return u"%s" % self.id
