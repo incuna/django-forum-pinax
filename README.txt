@@ -47,6 +47,18 @@ Note: The forum software can be at any URI you like, just change the relevant
 urls.py entry. EG replace 'forum/' with '/' to have your forum at the root 
 URI, or 'mysite/community/forum/' - whatever you need.
 
+Note: You can include the forum sitemaps in your main sitemap index.
+Example:
+
+    from forum.urls import sitemap_dict as forum_sitemap
+
+    yoursitemap_dict.update(forum_sitemap)
+
+    urlpatterns = patterns('',
+        (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': yoursitemap_dict}),
+        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': yoursitemap_dict}),
+    )
+
 Thanks
 ------
 

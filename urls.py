@@ -12,10 +12,17 @@ Usage in your base urls.py:
 from django.conf.urls.defaults import *
 from forum.models import Forum
 from forum.feeds import RssForumFeed, AtomForumFeed
+from forum.sitemap import ForumSitemap, ThreadSitemap, PostSitemap
 
 feed_dict = {
     'rss' : RssForumFeed,
     'atom': AtomForumFeed
+}
+
+sitemap_dict = {
+    'forums': ForumSitemap,
+    'threads': ThreadSitemap,
+    'posts': PostSitemap,
 }
 
 urlpatterns = patterns('',
@@ -33,4 +40,7 @@ urlpatterns = patterns('',
 
     url(r'^([-\w/]+/)(?P<forum>[-\w]+)/new/$', 'forum.views.newthread'),
     url(r'^([-\w/]+/)(?P<slug>[-\w]+)/$', 'forum.views.forum', name='forum_subforum_thread_list'),
+
+    (r'^sitemap.xml$', 'django.contrib.sitemaps.views.index', {'sitemaps': sitemap_dict}),
+    (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemap_dict}),
 )
