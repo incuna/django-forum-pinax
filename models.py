@@ -152,8 +152,8 @@ class Thread(models.Model):
     """
     forum = models.ForeignKey(Forum)
     title = models.CharField(_("Title"), max_length=100)
-    sticky = models.BooleanField(_("Sticky?"), blank=True, null=True, default=False)
-    closed = models.BooleanField(_("Closed?"), blank=True, null=True, default=False)
+    sticky = models.BooleanField(_("Sticky?"), blank=True, default=False)
+    closed = models.BooleanField(_("Closed?"), blank=True, default=False)
     posts = models.IntegerField(_("Posts"), default=0)
     views = models.IntegerField(_("Views"), default=0)
     latest_post_time = models.DateTimeField(_("Latest Post Time"), blank=True, null=True)
@@ -170,7 +170,7 @@ class Thread(models.Model):
     thread_latest_post = property(_get_thread_latest_post)
 
     class Meta:
-        ordering = ('sticky', '-latest_post_time')
+        ordering = ('-sticky', '-latest_post_time')
         verbose_name = _('Thread')
         verbose_name_plural = _('Threads')
 
