@@ -27,8 +27,8 @@ class Forum(models.Model):
     slug = models.SlugField(_("Slug"))
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
     description = models.TextField(_("Description"))
-    threads = models.IntegerField(_("Threads"), default=0)
-    posts = models.IntegerField(_("Posts"), default=0)
+    threads = models.IntegerField(_("Threads"), default=0, editable=False)
+    posts = models.IntegerField(_("Posts"), default=0, editable=False)
 
     objects = ForumManager()
 
@@ -243,6 +243,8 @@ class Post(models.Model):
 
     class Meta:
         ordering = ('-time',)
+        verbose_name = _('Post')
+        verbose_name_plural = _('Posts')
         
     def get_absolute_url(self):
         return '%s?page=last#post%s' % (self.thread.get_absolute_url(), self.id)
