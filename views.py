@@ -151,7 +151,6 @@ def reply(request, thread):
                     subject=mail_subject+' '+striptags(t.title),
                     body= mail_tpl.render(c),
                     from_email=mail_from,
-                    to=[mail_from],
                     bcc=[s.author.email for s in t.subscription_set.all()],)
             email.send(fail_silently=True)
 
