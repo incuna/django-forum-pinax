@@ -6,7 +6,7 @@ class ForumManager(models.Manager):
         if groups:
             public = Q(groups__isnull=True)
             user_groups = Q(groups__in=groups)
-            return self.filter(public|user_groups)
+            return self.filter(public|user_groups).distinct()
         return self.filter(groups__isnull=True)
     
     def has_access(self, forum, groups):
