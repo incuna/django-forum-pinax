@@ -59,6 +59,30 @@ Example:
         (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': yoursitemap_dict}),
     )
 
+Upgrading
+---------
+
+If you've upgraded from an SVN revision prior to r51, you will need to 
+update your database using the following commands:
+
+# MySQL:
+ALTER TABLE forum_post ADD COLUMN body_html longtext;
+ALTER TABLE "forum_forum" ADD COLUMN "ordering" integer NULL;
+
+# Or, PostgreSQL:
+ALTER TABLE "forum_post" ADD COLUMN "body_html" text; # PostgreSQL
+ALTER TABLE "forum_forum" ADD COLUMN "ordering" integer NULL;
+
+Then, from a Python shell:
+
+>>> from markdown import markdown
+>>> from forum.models import Post
+>>> for post in Post.objects.all():
+...     post.body_html = ''
+...     post.save()
+...
+>>> exit()
+
 Thanks
 ------
 
@@ -74,3 +98,5 @@ you for all of your efforts:
 * Aron Jones
 * Sir Steve H
 * xphuture
+* bymenda
+* macmichael01

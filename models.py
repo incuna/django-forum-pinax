@@ -10,6 +10,14 @@ import datetime
 from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import escape
+try:
+    from markdown import markdown
+except ImportError:
+    class MarkdownNotFound(Exception):
+        def __str__(self):
+            return "Markdown is not installed!"
+    raise MarkdownNotFound
 
 from forum.managers import ForumManager
 
@@ -29,6 +37,7 @@ class Forum(models.Model):
     description = models.TextField(_("Description"))
     threads = models.IntegerField(_("Threads"), default=0, editable=False)
     posts = models.IntegerField(_("Posts"), default=0, editable=False)
+    ordering = models.IntegerField(_("Ordering"), blank=True, null=True)
 
     objects = ForumManager()
 
@@ -108,7 +117,7 @@ class Forum(models.Model):
         return u'%s' % self.title
     
     class Meta:
-        ordering = ['title',]
+        ordering = ['ordering', 'title',]
         verbose_name = _('Forum')
         verbose_name_plural = _('Forums')
 
@@ -204,13 +213,14 @@ class Post(models.Model):
     thread = models.ForeignKey(Thread)
     author = models.ForeignKey(User, related_name='forum_post_set')
     body = models.TextField(_("Body"))
+    body_html = models.TextField(editable=False)
     time = models.DateTimeField(_("Time"), blank=True, null=True)
 
     def save(self, force_insert=False, force_update=False):
-        new_post = False
         if not self.id:
             self.time = datetime.datetime.now()
-            
+        
+        self.body_html = markdown(escape(self.body))
         super(Post, self).save(force_insert, force_update)
 
         t = self.thread
