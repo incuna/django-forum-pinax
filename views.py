@@ -236,5 +236,6 @@ def updatesubs(request):
     return render_to_response('forum/updatesubs.html',
         RequestContext(request, {
             'subs': subs,
+            'next': request.GET.get('next')
         }))
        

@@ -30,7 +30,7 @@
 </ul>
 {% endif %}
 
-{% if request.user.is_authenticated %}<p><a href="{% url forum_subscriptions %}">{% trans "Update Subscriptions" %}</a></p>{% endif %}
+{% if request.user.is_authenticated %}<p><a href="{% url forum_subscriptions %}?next={{ request.path }}">{% trans "Update Subscriptions" %}</a></p>{% endif %}
 <h2>{% trans "Post a Reply" %}</h2>
 {% if thread.closed %}
 <p>{% trans "Sorry, this thread is closed. No further replies are permitted." %}</p>

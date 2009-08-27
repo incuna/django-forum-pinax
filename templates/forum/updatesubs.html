@@ -31,6 +31,13 @@
 <p><input type='submit' value='{% trans "Update Subscriptions" %}' name="updatesubs" /></p>
 </form>
 {% endif %}
+
+{% if next %}
+<p>
+<a href="{{ next }}">{% trans "Go back to thread" %}</a>
+</p>
+{% endif %}
+
 {% else %}
 <p>{% trans "Please login to update your forum subscriptions." %}</p>
 {% endif %}
