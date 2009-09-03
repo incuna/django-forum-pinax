@@ -127,33 +127,34 @@ def reply(request, thread):
                 if sub:
                     sub.delete()
 
-            # Subscriptions are updated now send mail to all the authors subscribed in
-            # this thread.
-            mail_subject = ''
-            try:
-                mail_subject = settings.FORUM_MAIL_PREFIX 
-            except AttributeError:
-                mail_subject = '[Forum]'
+            if t.subscription_set.count() > 0:
+                # Subscriptions are updated now send mail to all the authors subscribed in
+                # this thread.
+                mail_subject = ''
+                try:
+                    mail_subject = settings.FORUM_MAIL_PREFIX 
+                except AttributeError:
+                    mail_subject = '[Forum]'
 
-            mail_from = ''
-            try:
-                mail_from = settings.FORUM_MAIL_FROM
-            except AttributeError:
-                mail_from = settings.DEFAULT_FROM_EMAIL
+                mail_from = ''
+                try:
+                    mail_from = settings.FORUM_MAIL_FROM
+                except AttributeError:
+                    mail_from = settings.DEFAULT_FROM_EMAIL
 
-            mail_tpl = loader.get_template('forum/notify.txt')
-            c = Context({
-                'body': wordwrap(striptags(body), 72),
-                'site' : Site.objects.get_current(),
-                'thread': t,
-                })
+                mail_tpl = loader.get_template('forum/notify.txt')
+                c = Context({
+                    'body': wordwrap(striptags(body), 72),
+                    'site' : Site.objects.get_current(),
+                    'thread': t,
+                    })
 
-            email = EmailMessage(
-                    subject=mail_subject+' '+striptags(t.title),
-                    body= mail_tpl.render(c),
-                    from_email=mail_from,
-                    bcc=[s.author.email for s in t.subscription_set.all()],)
-            email.send(fail_silently=True)
+                email = EmailMessage(
+                        subject=mail_subject+' '+striptags(t.title),
+                        body= mail_tpl.render(c),
+                        from_email=mail_from,
+                        bcc=[s.author.email for s in t.subscription_set.all()],)
+                email.send(fail_silently=True)
 
             return HttpResponseRedirect(p.get_absolute_url())
     else:

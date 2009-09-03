@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = 'r52'
+version = 'r53'
 
 LONG_DESCRIPTION = """
 ============
