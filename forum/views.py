@@ -3,6 +3,7 @@ All forum logic is kept here - displaying lists of forums, threads
 and posts, adding new threads, and adding replies.
 """
 
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render_to_response
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError, HttpResponseForbidden, HttpResponseNotAllowed
@@ -18,6 +19,11 @@ from django.views.generic.list_detail import object_list
 
 from forum.models import Forum,Thread,Post,Subscription
 from forum.forms import CreateThreadForm, ReplyForm
+
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
 
 FORUM_PAGINATION = getattr(settings, 'FORUM_PAGINATION', 10)
 LOGIN_URL = getattr(settings, 'LOGIN_URL', '/accounts/login/')
@@ -64,19 +70,11 @@ def thread(request, thread):
         raise Http404
     
     p = t.post_set.select_related('author').all().order_by('time')
-    s = None
-    if request.user.is_authenticated():
-        s = t.subscription_set.select_related().filter(author=request.user)
 
     t.views += 1
     t.save()
 
-    if s:
-        initial = {'subscribe': True}
-    else:
-        initial = {'subscribe': False}
-
-    form = ReplyForm(initial=initial)
+    form = ReplyForm()
     
     return object_list( request,
                         queryset=p,
@@ -86,7 +84,6 @@ def thread(request, thread):
                         extra_context = {
                             'forum': t.forum,
                             'thread': t,
-                            'subscription': s,
                             'form': form,
                         })
 
@@ -115,46 +112,9 @@ def reply(request, thread):
                 )
             p.save()
 
-            sub = Subscription.objects.filter(thread=t, author=request.user)
-            if form.cleaned_data.get('subscribe',False):
-                if not sub:
-                    s = Subscription(
-                        author=request.user,
-                        thread=t
-                        )
-                    s.save()
-            else:
-                if sub:
-                    sub.delete()
-
-            if t.subscription_set.count() > 0:
-                # Subscriptions are updated now send mail to all the authors subscribed in
-                # this thread.
-                mail_subject = ''
-                try:
-                    mail_subject = settings.FORUM_MAIL_PREFIX 
-                except AttributeError:
-                    mail_subject = '[Forum]'
-
-                mail_from = ''
-                try:
-                    mail_from = settings.FORUM_MAIL_FROM
-                except AttributeError:
-                    mail_from = settings.DEFAULT_FROM_EMAIL
-
-                mail_tpl = loader.get_template('forum/notify.txt')
-                c = Context({
-                    'body': wordwrap(striptags(body), 72),
-                    'site' : Site.objects.get_current(),
-                    'thread': t,
-                    })
-
-                email = EmailMessage(
-                        subject=mail_subject+' '+striptags(t.title),
-                        body= mail_tpl.render(c),
-                        from_email=mail_from,
-                        bcc=[s.author.email for s in t.subscription_set.all()],)
-                email.send(fail_silently=True)
+            # Send notifications (if installed)
+            if notification:
+                notification.send(User.objects.filter(forum_post_set__thread=t).distinct(), "forum_new_reply", {"post": p, "thread": t, "site": Site.objects.get_current()})
 
             return HttpResponseRedirect(p.get_absolute_url())
     else:
@@ -201,12 +161,6 @@ def newthread(request, forum):
             )
             p.save()
     
-            if form.cleaned_data.get('subscribe', False):
-                s = Subscription(
-                    author=request.user,
-                    thread=t
-                    )
-                s.save()
             return HttpResponseRedirect(t.get_absolute_url())
     else:
         form = CreateThreadForm()

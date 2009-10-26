@@ -1,0 +1,4 @@
+{% load i18n %}{% blocktrans with thread.get_absolute_url as thread_url %}{{ post.author }} has replied to {{ thread }}.
+
+http://{{ site }}{{ thread_url }}
+{% endblocktrans %}

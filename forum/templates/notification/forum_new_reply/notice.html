@@ -1,0 +1,2 @@
+{% load i18n %}{% url profile_detail username=post.author.username as user_url %}
+{% blocktrans with thread.get_absolute_url as thread_url %}<a href="{{ user_url }}">{{ user }}</a> has replied to <a href="{{ thread_url }}">{{ thread }}</a>.{% endblocktrans %}
